@@ -1,12 +1,15 @@
-export default function Hero({ onStart, ctaLabel = "Start skin match" }) {
+export default function Hero({
+  onStart,
+  headline = "Find the skincare product that fits your skin.",
+  subtext = "Answer a few quick questions and compare products without reading every label.",
+  ctaLabel = "Start skin match"
+}) {
   return (
     <section className="hero">
       <div className="hero__copy">
         <p className="brand-mark">GlowGuide</p>
-        <h1>Find the skincare product that fits your skin.</h1>
-        <p className="hero__subtext">
-          Answer a few quick questions and compare products without reading every label.
-        </p>
+        <h1>{headline}</h1>
+        <p className="hero__subtext">{subtext}</p>
         <button className="primary-button" type="button" onClick={onStart}>
           {ctaLabel}
         </button>

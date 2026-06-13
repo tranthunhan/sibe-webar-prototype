@@ -24,6 +24,22 @@ const defaultAnswers = {
 const shortlistKey = "glowguide_shortlist";
 const sessionKey = "glowguide_session_id";
 const refCodeKey = "gg_ref_code";
+const legacySessionKey = "gg_session";
+const eventsKey = "gg_events";
+
+function applyResetParam() {
+  if (new URLSearchParams(window.location.search).get("reset") !== "1") return;
+
+  try {
+    [eventsKey, legacySessionKey, sessionKey, shortlistKey, refCodeKey].forEach((key) => {
+      localStorage.removeItem(key);
+    });
+  } catch {
+    // localStorage unavailable - continue without blocking the app
+  }
+}
+
+applyResetParam();
 
 function readShortlist() {
   try {
@@ -79,6 +95,21 @@ export default function App() {
   const sessionId = useMemo(() => getSessionId(), []);
   const refCode = useMemo(() => getRefCode(), []);
   const variant = useMemo(() => getVariant(), []);
+  const heroCopy = useMemo(
+    () =>
+      variant === "b"
+        ? {
+            headline: "Browse the skincare range.",
+            subtext: "Review the shelf options and choose one product that looks right for you.",
+            ctaLabel: "Browse products"
+          }
+        : {
+            headline: "Find the skincare product that fits your skin.",
+            subtext: "Answer a few quick questions and compare products without reading every label.",
+            ctaLabel: "Start skin match"
+          },
+    [variant]
+  );
 
   const matches = useMemo(() => getRecommendations(skincareProducts, answers), [answers]);
   const bestMatch = matches[0];
@@ -203,7 +234,9 @@ export default function App() {
     <main className="app">
       <Hero
         onStart={handleHeroCta}
-        ctaLabel={variant === "b" ? "Browse products" : "Start skin match"}
+        headline={heroCopy.headline}
+        subtext={heroCopy.subtext}
+        ctaLabel={heroCopy.ctaLabel}
       />
 
       {variant === "a" && (
@@ -262,6 +295,7 @@ export default function App() {
         decisionTimeMs={decisionTimeMs}
         refCode={refCode}
         shortlistCount={shortlistIds.length}
+        variant={variant}
         onClose={() => setFinalChoice(null)}
       />
     </main>

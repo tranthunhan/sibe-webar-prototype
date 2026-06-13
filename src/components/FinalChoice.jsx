@@ -7,6 +7,12 @@ const FEEDBACK_QUESTIONS = [
   { id: "satisfied", text: "I am satisfied with my selected product." }
 ];
 
+const BROWSE_FEEDBACK_QUESTIONS = [
+  { id: "confident", text: "I feel confident about this choice." },
+  { id: "easy", text: "It was easy to review the options." },
+  { id: "satisfied", text: "I am satisfied with my selected product." }
+];
+
 function formatDecisionTime(ms) {
   const sec = Math.round(ms / 1000);
   if (sec < 60) return `${sec} seconds`;
@@ -35,6 +41,7 @@ export default function FinalChoice({
   comparedProducts,
   decisionTimeMs,
   refCode,
+  variant = "a",
   onClose
 }) {
   const [ratings, setRatings] = useState({});
@@ -42,7 +49,8 @@ export default function FinalChoice({
 
   if (!choice) return null;
 
-  const allAnswered = FEEDBACK_QUESTIONS.every((q) => ratings[q.id] != null);
+  const feedbackQuestions = variant === "b" ? BROWSE_FEEDBACK_QUESTIONS : FEEDBACK_QUESTIONS;
+  const allAnswered = feedbackQuestions.every((q) => ratings[q.id] != null);
 
   function handleRate(questionId, value) {
     if (submitted) return;
@@ -72,7 +80,9 @@ export default function FinalChoice({
           ×
         </button>
 
-        <span className="eyebrow">Your skin match is saved</span>
+        <span className="eyebrow">
+          {variant === "b" ? "Your product choice is saved" : "Your skin match is saved"}
+        </span>
 
         <div className="final-summary">
           <img
@@ -99,11 +109,13 @@ export default function FinalChoice({
             <p>{formatDecisionTime(decisionTimeMs)}</p>
           </article>
           <article>
-            <h3>Products compared</h3>
+            <h3>{variant === "b" ? "Products reviewed" : "Products compared"}</h3>
             <p>
               {comparedProducts.length > 0
                 ? comparedProducts.map((p) => p.name).join(", ")
-                : "No side-by-side comparison."}
+                : variant === "b"
+                  ? "No additional products selected."
+                  : "No side-by-side comparison."}
             </p>
           </article>
         </div>
@@ -120,7 +132,7 @@ export default function FinalChoice({
 
         <div className="feedback-section">
           <h3 className="feedback-heading">Quick feedback</h3>
-          {FEEDBACK_QUESTIONS.map((q) => (
+          {feedbackQuestions.map((q) => (
             <div key={q.id} className="feedback-question">
               <p>{q.text}</p>
               <div className="feedback-rating" role="group" aria-label={q.text}>

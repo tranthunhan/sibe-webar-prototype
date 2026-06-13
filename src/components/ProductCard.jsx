@@ -1,6 +1,15 @@
 import { formatLabel } from "../lib/recommender.js";
 import IngredientDecoder from "./IngredientDecoder.jsx";
 
+const visibleTagLabels = {
+  "night treatment": "night care",
+  "oil control": "oil balance"
+};
+
+function formatVisibleTag(tag) {
+  return visibleTagLabels[tag.toLowerCase()] || tag;
+}
+
 export default function ProductCard({
   product,
   score,
@@ -60,7 +69,7 @@ export default function ProductCard({
 
         <div className="tag-row">
           {product.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
+            <span key={tag}>{formatVisibleTag(tag)}</span>
           ))}
         </div>
 
