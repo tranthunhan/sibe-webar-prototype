@@ -14,7 +14,10 @@ export default function Shortlist({ products, onChoose, onRemove }) {
         <div className="shortlist-grid">
           {products.map((product) => (
             <article className="shortlist-item" key={product.id}>
-              <img src={`${import.meta.env.BASE_URL}${product.image}`} alt="" />
+              <img
+                src={`${import.meta.env.BASE_URL}${product.image}`}
+                alt={`${product.name} product packshot`}
+              />
               <div>
                 <strong>{product.name}</strong>
                 <span>

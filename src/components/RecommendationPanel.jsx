@@ -9,7 +9,10 @@ export default function RecommendationPanel({ match, alternatives, answers, onCh
     <section className="recommendation-panel" aria-label="Recommended product">
       <div className="match-card">
         <div className="match-card__image">
-          <img src={`${import.meta.env.BASE_URL}${product.image}`} alt={product.name} />
+          <img
+            src={`${import.meta.env.BASE_URL}${product.image}`}
+            alt={`${product.name} product packshot`}
+          />
         </div>
         <div className="match-card__content">
           <span className="eyebrow">Best match</span>

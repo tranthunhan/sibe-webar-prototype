@@ -29,8 +29,11 @@ export default function CompareDrawer({ products, onRemove }) {
               <tr>
                 <th scope="col">Detail</th>
                 {products.map((product) => (
-                  <th scope="col" key={product.id}>
-                    <img src={`${import.meta.env.BASE_URL}${product.image}`} alt="" />
+                <th scope="col" key={product.id}>
+                    <img
+                      src={`${import.meta.env.BASE_URL}${product.image}`}
+                      alt={`${product.name} product packshot`}
+                    />
                     <span>{product.name}</span>
                     <button type="button" onClick={() => onRemove(product.id)}>
                       Remove

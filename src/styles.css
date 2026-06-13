@@ -141,6 +141,7 @@ td {
 
 .hero__visual img {
   width: 100%;
+  height: clamp(220px, 36vw, 340px);
   max-height: 340px;
   object-fit: contain;
 }
@@ -316,7 +317,9 @@ td {
 }
 
 .match-card__image img {
-  max-height: 250px;
+  width: min(72%, 220px);
+  height: 250px;
+  object-fit: contain;
 }
 
 .match-card__content {
@@ -474,7 +477,10 @@ td {
 }
 
 .product-card__media img {
+  width: min(74%, 190px);
+  height: 210px;
   max-height: 210px;
+  object-fit: contain;
   padding: 16px;
 }
 
@@ -563,7 +569,9 @@ dd {
 }
 
 .comparison-table img {
+  width: 78px;
   height: 92px;
+  object-fit: contain;
   margin-bottom: 8px;
 }
 
@@ -662,6 +670,8 @@ dd {
 }
 
 .final-summary img {
+  width: 96px;
+  height: 112px;
   max-height: 112px;
   object-fit: contain;
 }

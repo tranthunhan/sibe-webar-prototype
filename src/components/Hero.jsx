@@ -12,9 +12,18 @@ export default function Hero({ onStart }) {
         </button>
       </div>
       <div className="hero__visual" aria-label="Skincare product lineup">
-        <img src={`${import.meta.env.BASE_URL}products/glow-c-serum.svg`} alt="" />
-        <img src={`${import.meta.env.BASE_URL}products/dew-barrier-moisturiser.svg`} alt="" />
-        <img src={`${import.meta.env.BASE_URL}products/daily-shield-spf-50.svg`} alt="" />
+        <img
+          src={`${import.meta.env.BASE_URL}products/glow-c-serum.svg`}
+          alt="Glow C Serum bottle"
+        />
+        <img
+          src={`${import.meta.env.BASE_URL}products/dew-barrier-moisturiser.svg`}
+          alt="Dew Barrier Moisturiser jar"
+        />
+        <img
+          src={`${import.meta.env.BASE_URL}products/daily-shield-spf-50.svg`}
+          alt="Daily Shield SPF 50 tube"
+        />
       </div>
     </section>
   );

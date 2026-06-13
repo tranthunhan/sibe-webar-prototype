@@ -13,7 +13,10 @@ export default function ProductCard({
   return (
     <article className="product-card">
       <div className="product-card__media">
-        <img src={`${import.meta.env.BASE_URL}${product.image}`} alt={product.name} />
+        <img
+          src={`${import.meta.env.BASE_URL}${product.image}`}
+          alt={`${product.name} product packshot`}
+        />
         <span>{score}% match</span>
       </div>
       <div className="product-card__body">

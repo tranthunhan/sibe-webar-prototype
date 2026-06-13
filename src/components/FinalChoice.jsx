@@ -9,7 +9,10 @@ export default function FinalChoice({ choice, comparedProducts, decisionTimeSeco
         </button>
         <span className="eyebrow">Your selected product</span>
         <div className="final-summary">
-          <img src={`${import.meta.env.BASE_URL}${choice.image}`} alt="" />
+          <img
+            src={`${import.meta.env.BASE_URL}${choice.image}`}
+            alt={`${choice.name} product packshot`}
+          />
           <div>
             <h2 id="final-choice-title">{choice.name}</h2>
             <p>{choice.description}</p>
