@@ -1,0 +1,471 @@
+/*
+  SIBE 2026 prototype styling.
+  Academic mapping:
+  [CO] High-contrast hierarchy makes product and decision information easy to parse.
+  [DF] Mobile-first spacing keeps comparison readable without adding navigation choices.
+  [ED] Motion, glow, and responsive states create bounded delight without prize mechanics.
+  [PR] AR shell and overlay layers visually distinguish phygital touchpoints from shelf UI.
+*/
+:root {
+  color: #14213d;
+  background: #f6f7fb;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(0, 166, 147, 0.18), transparent 28rem),
+    linear-gradient(180deg, #f7fafc 0%, #edf2f7 100%);
+}
+
+button {
+  border: 0;
+  font: inherit;
+}
+
+.app {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 18px;
+  padding-bottom: 120px;
+}
+
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  max-width: 12ch;
+  color: #0b1220;
+  font-size: 2rem;
+  line-height: 1.02;
+}
+
+h2 {
+  color: #0b1220;
+  font-size: 1.35rem;
+  line-height: 1.15;
+}
+
+h3 {
+  color: #0b1220;
+  font-size: 1rem;
+}
+
+.eyebrow {
+  color: #00796b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.condition-pill,
+.product-card__badge {
+  flex: 0 0 auto;
+  border: 1px solid rgba(20, 33, 61, 0.14);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #14213d;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 7px 10px;
+  text-transform: capitalize;
+}
+
+.section-heading,
+.filter-panel,
+.decision-summary,
+.ar-shell,
+.micro-delight {
+  border: 1px solid rgba(20, 33, 61, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 45px rgba(20, 33, 61, 0.08);
+}
+
+.section-heading {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 16px;
+}
+
+.section-heading p:last-child {
+  color: #4a5568;
+}
+
+.shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.product-card {
+  display: grid;
+  min-height: 236px;
+  gap: 8px;
+  border: 1px solid rgba(20, 33, 61, 0.14);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #14213d;
+  padding: 12px;
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.product-card:active,
+.product-card.is-selected {
+  border-color: #00a693;
+  box-shadow: 0 12px 28px rgba(0, 166, 147, 0.18);
+  transform: translateY(-1px);
+}
+
+.product-card strong {
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.product-card dl,
+.decision-summary dl {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.product-card dl div,
+.decision-summary dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  border-top: 1px solid rgba(20, 33, 61, 0.08);
+  padding-top: 5px;
+}
+
+dt {
+  color: #5a6474;
+  font-size: 0.72rem;
+}
+
+dd {
+  margin: 0;
+  color: #0b1220;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.tag-row {
+  color: #5a6474;
+  font-size: 0.72rem;
+}
+
+.phygital-layout {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-panel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.filter-panel__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  border-radius: 8px;
+  background: #eefbf8;
+  color: #0b1220;
+  padding: 12px;
+  text-align: left;
+}
+
+.filter-panel__summary small {
+  display: block;
+  color: #00796b;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.preference-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.chip {
+  min-height: 46px;
+  border: 1px solid rgba(20, 33, 61, 0.12);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #14213d;
+  font-weight: 800;
+}
+
+.chip.is-active {
+  border-color: #00a693;
+  background: #00a693;
+  color: #ffffff;
+}
+
+.ar-shell {
+  position: relative;
+  min-height: 500px;
+  overflow: hidden;
+  background: #0b1220;
+  color: #ffffff;
+}
+
+.ar-shell--loading {
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  padding: 18px;
+  text-align: center;
+}
+
+.ar-shell--loading h2,
+.ar-shell .eyebrow {
+  color: #ffffff;
+}
+
+.ar-shell--fallback {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  background:
+    linear-gradient(135deg, rgba(0, 166, 147, 0.3), rgba(255, 183, 77, 0.16)),
+    #101828;
+}
+
+.fallback-marker {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  min-height: 180px;
+  border: 1px dashed rgba(255, 255, 255, 0.42);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fallback-marker img {
+  width: 112px;
+  height: 112px;
+  border-radius: 8px;
+  image-rendering: auto;
+}
+
+.ar-stage {
+  display: grid;
+  gap: 10px;
+}
+
+.ar-stage h2,
+.ar-stage p {
+  color: #ffffff;
+}
+
+.ar-shell--live a-scene {
+  width: 100%;
+  height: 500px;
+}
+
+.ar-overlay {
+  position: absolute;
+  inset: auto 12px 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.floating-cards {
+  display: grid;
+  gap: 8px;
+}
+
+.floating-card {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #14213d;
+  padding: 12px;
+  text-align: left;
+  animation: riseIn 420ms ease both;
+  animation-delay: var(--delay);
+}
+
+.floating-card span {
+  color: #00796b;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.floating-card strong {
+  font-size: 0.95rem;
+}
+
+.micro-delight {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  transition:
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+.micro-delight.is-glowing {
+  border-color: #ffb74d;
+  box-shadow: 0 0 0 4px rgba(255, 183, 77, 0.18), 0 18px 38px rgba(255, 183, 77, 0.2);
+}
+
+.micro-delight button {
+  min-height: 42px;
+  border-radius: 8px;
+  background: #ffb74d;
+  color: #0b1220;
+  font-weight: 900;
+  padding: 0 14px;
+}
+
+.progress-track {
+  grid-column: 1 / -1;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(20, 33, 61, 0.12);
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #00a693, #ffb74d);
+  transition: width 220ms ease;
+}
+
+.decision-summary {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  z-index: 20;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.decision-summary p {
+  color: #4a5568;
+}
+
+.primary-action {
+  min-height: 48px;
+  border-radius: 8px;
+  background: #14213d;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.primary-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.completion-note {
+  margin-top: 16px;
+  border-radius: 8px;
+  background: #e7f8f4;
+  color: #00695c;
+  padding: 12px;
+  font-weight: 800;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 760px) {
+  .app {
+    padding: 28px;
+    padding-bottom: 28px;
+  }
+
+  .app-header {
+    align-items: center;
+  }
+
+  h1 {
+    max-width: none;
+    font-size: 3rem;
+  }
+
+  .shelf-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .phygital-layout {
+    grid-template-columns: 320px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .decision-summary {
+    position: sticky;
+    bottom: 18px;
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.8fr) auto;
+    align-items: center;
+    margin-top: 18px;
+  }
+
+  .primary-action {
+    min-width: 190px;
+  }
+}
+
+@media (min-width: 1040px) {
+  .shelf-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
