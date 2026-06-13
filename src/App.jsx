@@ -1,185 +1,198 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ARScene from "./components/ARScene.jsx";
-import ControlShelf from "./components/ControlShelf.jsx";
-import DecisionSummary from "./components/DecisionSummary.jsx";
-import FilterPanel from "./components/FilterPanel.jsx";
-import { getBestProduct, products } from "./data/products.js";
-import { assignCondition, getSessionId } from "./lib/abTest.js";
+import { nanoid } from "nanoid";
+import CompareDrawer from "./components/CompareDrawer.jsx";
+import FinalChoice from "./components/FinalChoice.jsx";
+import Hero from "./components/Hero.jsx";
+import ProductGrid from "./components/ProductGrid.jsx";
+import RecommendationPanel from "./components/RecommendationPanel.jsx";
+import RoutineProgress from "./components/RoutineProgress.jsx";
+import Shortlist from "./components/Shortlist.jsx";
+import SkinQuiz from "./components/SkinQuiz.jsx";
+import { skincareProducts } from "./data/skincareProducts.js";
 import { configureAnalytics, getElapsedMs, logEvent } from "./lib/analytics.js";
+import { getRecommendations, getRoutineProgress } from "./lib/recommender.js";
+
+const defaultAnswers = {
+  skinType: "combination",
+  concern: "dryness",
+  texture: "serum",
+  budget: "mid",
+  routineStep: "serum"
+};
+
+const shortlistKey = "glowguide_shortlist";
+const sessionKey = "glowguide_session_id";
+
+function readShortlist() {
+  try {
+    return JSON.parse(localStorage.getItem(shortlistKey)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function getSessionId() {
+  const existing = localStorage.getItem(sessionKey);
+  if (existing) return existing;
+
+  const next = nanoid(12);
+  localStorage.setItem(sessionKey, next);
+  return next;
+}
 
 // Academic mapping:
-// [CO] App-level state centralizes condition, choice, and timing so participant burden is low.
-// [DF] The control condition preserves dense comparison while phygital mode narrows the path.
-// [ED] Micro-interactions are responsive and non-prize based, keeping delight ethical and bounded.
-// [PR] A shared final-choice outcome compares receptivity across shelf and WebAR experiences.
+// [CO] This guided selector reduces cognitive load by narrowing product comparison.
+// [DF] The recommendation flow reduces decision fatigue by limiting the final choice set.
+// [ED] The progress bar and match score create emotional delight without prize-based mechanics.
+// [PR] The QR-like scenario supports willingness to use digital product guidance.
 export default function App() {
-  const assignment = useMemo(() => assignCondition(), []);
+  const quizRef = useRef(null);
+  const [answers, setAnswers] = useState(defaultAnswers);
+  const [comparedIds, setComparedIds] = useState([]);
+  const [shortlistIds, setShortlistIds] = useState(readShortlist);
+  const [finalChoice, setFinalChoice] = useState(null);
+  const [decisionTimeSeconds, setDecisionTimeSeconds] = useState(0);
   const sessionId = useMemo(() => getSessionId(), []);
-  const [preference, setPreference] = useState("energy");
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [interactionCount, setInteractionCount] = useState(0);
-  const [choiceRecorded, setChoiceRecorded] = useState(false);
-  const [elapsedMs, setElapsedMs] = useState(0);
-  const sessionEndLogged = useRef(false);
 
-  const recommendedProduct = useMemo(() => getBestProduct(preference), [preference]);
-  const activeProduct = selectedProduct || recommendedProduct;
+  const matches = useMemo(() => getRecommendations(skincareProducts, answers), [answers]);
+  const bestMatch = matches[0];
+  const alternatives = matches.slice(1, 4);
 
-  useEffect(() => {
-    configureAnalytics({ sessionId, condition: assignment.condition });
-    logEvent("session_start", { assignmentSource: assignment.source }, "session");
-    logEvent(
-      "condition_assigned",
-      { assignmentSource: assignment.source, condition: assignment.condition },
-      "experiment"
-    );
-  }, [assignment.condition, assignment.source, sessionId]);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setElapsedMs(getElapsedMs()), 1000);
-    return () => window.clearInterval(timer);
+  const productById = useMemo(() => {
+    return new Map(skincareProducts.map((product) => [product.id, product]));
   }, []);
 
+  const comparedProducts = comparedIds.map((id) => productById.get(id)).filter(Boolean);
+  const shortlistedProducts = shortlistIds.map((id) => productById.get(id)).filter(Boolean);
+  const routineProducts = useMemo(() => {
+    const products = new Map();
+    if (bestMatch?.product) products.set(bestMatch.product.id, bestMatch.product);
+    shortlistedProducts.forEach((product) => products.set(product.id, product));
+    comparedProducts.forEach((product) => products.set(product.id, product));
+    return [...products.values()];
+  }, [bestMatch?.product, comparedProducts, shortlistedProducts]);
+  const routineProgress = useMemo(() => getRoutineProgress(routineProducts), [routineProducts]);
+  const confidence = bestMatch?.score || 0;
+
   useEffect(() => {
-    if (assignment.condition !== "phygital") return;
-    setSelectedProduct(recommendedProduct);
+    configureAnalytics({ sessionId, channel: "skin_finder" });
+    logEvent("session_start", { source: "qr_assistant" }, "session");
+  }, [sessionId]);
+
+  useEffect(() => {
+    localStorage.setItem(shortlistKey, JSON.stringify(shortlistIds));
+  }, [shortlistIds]);
+
+  useEffect(() => {
+    if (!bestMatch) return;
     logEvent(
-      "recommendation_shown",
-      { productId: recommendedProduct.id, preference },
+      "recommendation_updated",
+      { productId: bestMatch.product.id, score: bestMatch.score, answers },
       "recommendation"
     );
-  }, [assignment.condition, preference, recommendedProduct]);
+  }, [answers, bestMatch]);
 
-  const trackInteraction = useCallback((product, source) => {
-    setInteractionCount((count) => count + 1);
-    logEvent(
-      "info_card_viewed",
-      { productId: product.id, source },
-      source === "shelf_card" ? "control_shelf" : "ar_overlay"
-    );
+  const scrollToQuiz = useCallback(() => {
+    quizRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    logEvent("start_skin_match_clicked", {}, "navigation");
   }, []);
 
-  const handlePreferenceSelect = useCallback((nextPreference) => {
-    setPreference(nextPreference);
-    setInteractionCount((count) => count + 1);
-    logEvent("preference_selected", { preference: nextPreference }, "filter");
+  const handleAnswerChange = useCallback((field, value) => {
+    setAnswers((current) => ({ ...current, [field]: value }));
+    logEvent("quiz_answer_changed", { field, value }, "quiz");
   }, []);
 
-  const handleFilterOpen = useCallback(() => {
-    logEvent("filter_opened", { preference }, "filter");
-  }, [preference]);
-
-  const handleARSceneLoaded = useCallback((payload) => {
-    logEvent("ar_scene_loaded", payload, "ar");
+  const handleCompare = useCallback((productId) => {
+    setComparedIds((current) => {
+      if (current.includes(productId)) {
+        logEvent("compare_removed", { productId }, "comparison");
+        return current.filter((id) => id !== productId);
+      }
+      if (current.length >= 3) return current;
+      logEvent("compare_added", { productId }, "comparison");
+      return [...current, productId];
+    });
   }, []);
 
-  const handleTargetFound = useCallback((payload) => {
-    logEvent("target_found", payload, "ar");
+  const handleShortlist = useCallback((productId) => {
+    setShortlistIds((current) => {
+      if (current.includes(productId)) {
+        logEvent("shortlist_removed", { productId }, "shortlist");
+        return current.filter((id) => id !== productId);
+      }
+      logEvent("shortlist_added", { productId }, "shortlist");
+      return [...current, productId];
+    });
   }, []);
 
-  const handleARCardView = useCallback(
-    (card) => {
-      setInteractionCount((count) => count + 1);
+  const handleChoose = useCallback(
+    (product) => {
+      const elapsedSeconds = Math.round(getElapsedMs() / 1000);
+      setDecisionTimeSeconds(elapsedSeconds);
+      setFinalChoice(product);
       logEvent(
-        "info_card_viewed",
-        { productId: activeProduct.id, preference, cardId: card.id },
-        "ar_overlay"
+        "final_choice",
+        {
+          productId: product.id,
+          decisionTimeSeconds: elapsedSeconds,
+          comparedProductIds: comparedIds
+        },
+        "outcome"
       );
     },
-    [activeProduct.id, preference]
+    [comparedIds]
   );
-
-  const handleMicroTap = useCallback((payload) => {
-    setInteractionCount((count) => count + 1);
-    logEvent("micro_interaction_tap", payload, "micro_interaction");
-  }, []);
-
-  const handleDelightComplete = useCallback((payload) => {
-    logEvent("delight_animation_complete", payload, "micro_interaction");
-  }, []);
-
-  const handleFinalChoice = useCallback(() => {
-    if (!activeProduct || choiceRecorded) return;
-    setChoiceRecorded(true);
-    logEvent(
-      "final_choice",
-      {
-        productId: activeProduct.id,
-        preference,
-        interactions: interactionCount,
-        decisionTimeMs: getElapsedMs()
-      },
-      "outcome"
-    );
-    if (!sessionEndLogged.current) {
-      sessionEndLogged.current = true;
-      logEvent("session_end", { reason: "final_choice" }, "session");
-    }
-  }, [activeProduct, choiceRecorded, interactionCount, preference]);
-
-  useEffect(() => {
-    const endSession = () => {
-      if (sessionEndLogged.current) return;
-      sessionEndLogged.current = true;
-      logEvent("session_end", { reason: "page_hidden" }, "session");
-    };
-
-    window.addEventListener("pagehide", endSession);
-    return () => window.removeEventListener("pagehide", endSession);
-  }, []);
-
-  const isPhygital = assignment.condition === "phygital";
 
   return (
     <main className="app">
-      <header className="app-header">
-        <div>
-          <p className="eyebrow">SIBE 2026 study prototype</p>
-          <h1>{isPhygital ? "WebAR product guidance" : "Traditional shelf choice"}</h1>
-        </div>
-        <span className="condition-pill">{assignment.condition}</span>
-      </header>
+      <Hero onStart={scrollToQuiz} />
 
-      {isPhygital ? (
-        <div className="phygital-layout">
-          <FilterPanel
-            selectedPreference={preference}
-            onOpen={handleFilterOpen}
-            onSelect={handlePreferenceSelect}
-          />
-          <ARScene
-            product={activeProduct}
-            preference={preference}
-            onSceneLoaded={handleARSceneLoaded}
-            onTargetFound={handleTargetFound}
-            onCardView={handleARCardView}
-            onMicroTap={handleMicroTap}
-            onDelightComplete={handleDelightComplete}
-          />
-        </div>
-      ) : (
-        <ControlShelf
-          products={products}
-          selectedProductId={selectedProduct?.id}
-          onInteract={trackInteraction}
-          onSelect={setSelectedProduct}
-        />
-      )}
+      <section className="scenario-card" aria-label="In-store QR assistant">
+        <span className="eyebrow">In-store QR assistant</span>
+        <h2>Scan the shelf QR, select your skin needs, and get a clear product match.</h2>
+        <p>
+          GlowGuide turns product labels into a guided shortlist so you can compare quickly and
+          choose with more confidence in the aisle.
+        </p>
+      </section>
 
-      <DecisionSummary
-        product={isPhygital ? activeProduct : selectedProduct}
-        condition={assignment.condition}
-        preference={preference}
-        interactionCount={interactionCount}
-        elapsedMs={elapsedMs}
-        onFinalChoice={handleFinalChoice}
+      <div ref={quizRef}>
+        <SkinQuiz answers={answers} onChange={handleAnswerChange} />
+      </div>
+
+      <RecommendationPanel
+        alternatives={alternatives}
+        answers={answers}
+        match={bestMatch}
+        onChoose={handleChoose}
+        onShortlist={handleShortlist}
       />
 
-      {choiceRecorded ? (
-        <p className="completion-note" role="status">
-          Final choice recorded for this static prototype session.
-        </p>
-      ) : null}
+      <RoutineProgress confidence={confidence} progress={routineProgress} />
+
+      <ProductGrid
+        comparedIds={comparedIds}
+        matches={matches}
+        shortlistIds={shortlistIds}
+        onChoose={handleChoose}
+        onCompare={handleCompare}
+        onShortlist={handleShortlist}
+      />
+
+      <CompareDrawer products={comparedProducts} onRemove={handleCompare} />
+
+      <Shortlist
+        products={shortlistedProducts}
+        onChoose={handleChoose}
+        onRemove={handleShortlist}
+      />
+
+      <FinalChoice
+        choice={finalChoice}
+        comparedProducts={comparedProducts}
+        decisionTimeSeconds={decisionTimeSeconds}
+        onClose={() => setFinalChoice(null)}
+      />
     </main>
   );
 }

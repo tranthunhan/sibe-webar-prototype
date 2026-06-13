@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" role="img" aria-labelledby="title desc">
+  <title id="title">Cica Repair Cream</title>
+  <desc id="desc">Green cream tube.</desc>
+  <rect width="220" height="300" rx="28" fill="#eef8ed"/>
+  <ellipse cx="110" cy="264" rx="54" ry="10" fill="#bed9b9" opacity=".55"/>
+  <path d="M66 52h88l-12 198H78Z" fill="#ffffff" stroke="#7aa66e" stroke-width="4" stroke-linejoin="round"/>
+  <rect x="76" y="226" width="68" height="26" rx="8" fill="#7aa66e"/>
+  <rect x="82" y="88" width="56" height="92" rx="14" fill="#d8eed4"/>
+  <path d="M110 116c16 0 28 10 28 23s-12 23-28 23-28-10-28-23 12-23 28-23Z" fill="#ffffff" opacity=".78"/>
+  <text x="110" y="128" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#416f38">CICA</text>
+  <text x="110" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#416f38">REPAIR</text>
+  <text x="110" y="209" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#44633e">Cream</text>
+</svg>

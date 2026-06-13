@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" role="img" aria-labelledby="title desc">
+  <title id="title">Glow C Serum</title>
+  <desc id="desc">Amber serum dropper bottle.</desc>
+  <rect width="220" height="300" rx="28" fill="#fff4df"/>
+  <ellipse cx="110" cy="265" rx="46" ry="10" fill="#e8bd71" opacity=".55"/>
+  <rect x="88" y="38" width="44" height="48" rx="10" fill="#7a5540"/>
+  <rect x="98" y="28" width="24" height="22" rx="6" fill="#f2b457"/>
+  <rect x="70" y="80" width="80" height="174" rx="20" fill="#ffffff" stroke="#e4a64f" stroke-width="4"/>
+  <rect x="84" y="106" width="52" height="110" rx="14" fill="#ffd990"/>
+  <circle cx="110" cy="158" r="24" fill="#fff6dc" opacity=".82"/>
+  <text x="110" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#9a5c14">GLOW C</text>
+  <text x="110" y="235" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#6f4a1d">Serum</text>
+</svg>

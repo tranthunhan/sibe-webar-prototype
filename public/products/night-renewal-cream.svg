@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" role="img" aria-labelledby="title desc">
+  <title id="title">Night Renewal Cream</title>
+  <desc id="desc">Deep plum night cream jar.</desc>
+  <rect width="220" height="300" rx="28" fill="#f3eef8"/>
+  <ellipse cx="110" cy="258" rx="62" ry="12" fill="#c8b2d6" opacity=".55"/>
+  <rect x="60" y="88" width="100" height="30" rx="12" fill="#76558c"/>
+  <rect x="52" y="112" width="116" height="120" rx="28" fill="#ffffff" stroke="#76558c" stroke-width="4"/>
+  <rect x="70" y="136" width="80" height="70" rx="18" fill="#e8d9f0"/>
+  <path d="M123 143a28 28 0 1 0 0 45 22 22 0 1 1 0-45Z" fill="#76558c" opacity=".55"/>
+  <text x="110" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#503863">NIGHT</text>
+  <text x="110" y="174" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="700" fill="#503863">RENEWAL</text>
+  <text x="110" y="246" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#503863">Cream</text>
+</svg>
