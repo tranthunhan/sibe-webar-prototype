@@ -1,4 +1,5 @@
 import { formatLabel } from "../lib/recommender.js";
+import IngredientDecoder from "./IngredientDecoder.jsx";
 
 export default function ProductCard({
   product,
@@ -54,6 +55,8 @@ export default function ProductCard({
             <dd>{product.rating.toFixed(1)} / 5</dd>
           </div>
         </dl>
+
+        <IngredientDecoder ingredients={product.ingredients} />
 
         <div className="tag-row">
           {product.tags.map((tag) => (

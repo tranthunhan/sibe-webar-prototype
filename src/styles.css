@@ -752,3 +752,264 @@ dd {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* ── Browsing shelf (?v=b) ─────────────────────────────────── */
+
+.browsing-shelf {
+  margin-top: 18px;
+}
+
+.browsing-shelf__header {
+  margin-bottom: 18px;
+}
+
+.browsing-shelf__header p {
+  max-width: 560px;
+  margin-top: 6px;
+}
+
+.shelf-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.shelf-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(41, 79, 67, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow: 0 16px 40px rgba(64, 48, 36, 0.08);
+}
+
+.shelf-card__media {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  background:
+    linear-gradient(135deg, rgba(255, 244, 235, 0.92), rgba(233, 245, 240, 0.9)),
+    #ffffff;
+}
+
+.shelf-card__media img {
+  width: min(70%, 160px);
+  height: 180px;
+  object-fit: contain;
+  padding: 12px;
+}
+
+.shelf-card__body {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.shelf-card__body h3 {
+  margin-top: 3px;
+}
+
+.shelf-card__desc {
+  font-size: 0.88rem;
+}
+
+.shelf-card__meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #23312d;
+}
+
+.shelf-card__rating {
+  color: #9a5140;
+}
+
+.shelf-card__cta {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (min-width: 480px) {
+  .shelf-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 720px) {
+  .shelf-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1060px) {
+  .shelf-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ── Ingredient decoder ────────────────────────────────────── */
+
+.ingredient-decoder {
+  margin-top: 4px;
+}
+
+.decoder-toggle {
+  font-size: 0.82rem;
+  min-height: 36px;
+  padding: 0 12px;
+}
+
+.decoder-panel {
+  margin-top: 8px;
+  border: 1px solid rgba(41, 79, 67, 0.12);
+  border-radius: 8px;
+  background: #f5f0ea;
+  padding: 12px 14px;
+}
+
+.decoder-list {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.decoder-list li {
+  font-size: 0.82rem;
+  color: #23312d;
+}
+
+.decoder-list li strong {
+  color: #17251f;
+}
+
+.decoder-disclaimer {
+  font-size: 0.74rem;
+  color: #7a6b62;
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Final screen additions ────────────────────────────────── */
+
+.ref-code-block {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(41, 79, 67, 0.14);
+  border-radius: 8px;
+  background: #edf6f1;
+  padding: 13px 16px;
+}
+
+.ref-code-label {
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #2f6f5f;
+  margin-bottom: 3px;
+}
+
+.ref-code-value {
+  font-size: 1.4rem;
+  font-weight: 900;
+  font-family: ui-monospace, "Cascadia Code", "Fira Mono", monospace;
+  color: #17251f;
+  letter-spacing: 0.08em;
+}
+
+.ref-code-hint {
+  font-size: 0.8rem;
+  color: #57665f;
+  margin: 0;
+}
+
+@media (min-width: 520px) {
+  .ref-code-block {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.feedback-section {
+  border-top: 1px solid rgba(41, 79, 67, 0.1);
+  padding-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.feedback-heading {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #17251f;
+  margin: 0;
+}
+
+.feedback-question p {
+  font-size: 0.86rem;
+  color: #23312d;
+  margin-bottom: 6px;
+}
+
+.feedback-rating {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rating-btn {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid rgba(41, 79, 67, 0.18);
+  border-radius: 8px;
+  background: #fffdf8;
+  color: #394841;
+  font-size: 0.88rem;
+  font-weight: 900;
+  transition: background 120ms, color 120ms, border-color 120ms;
+}
+
+.rating-btn.selected {
+  background: #2f6f5f;
+  color: #ffffff;
+  border-color: #2f6f5f;
+}
+
+.rating-btn:hover:not(:disabled):not(.selected) {
+  background: #edf6f1;
+  border-color: #2f6f5f;
+}
+
+.feedback-submit-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.feedback-submitted {
+  font-size: 0.88rem;
+  color: #2f6f5f;
+  font-style: italic;
+  margin: 0;
+}
+
+.session-export-btn {
+  min-height: 40px;
+  border: 1px solid rgba(41, 79, 67, 0.18);
+  border-radius: 8px;
+  background: #fffdf8;
+  color: #7a6b62;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0 12px;
+  transition: color 120ms, border-color 120ms;
+}
+
+.session-export-btn:hover {
+  color: #17251f;
+  border-color: rgba(41, 79, 67, 0.36);
+}

@@ -2,24 +2,18 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const isDev = import.meta.env.DEV;
 const tableName = "glowguide_events";
+const eventsKey = "gg_events";
 
 const supabase =
   supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 let sessionStart = Date.now();
-let context = {
-  sessionId: "pending",
-  channel: "skin_finder"
-};
+let context = { sessionId: "pending", variant: "a" };
 
-// Academic mapping:
-// [CO] A single logging helper standardizes payloads and reduces instrumentation burden.
-// [DF] Console fallback prevents analytics setup decisions from blocking participant flow.
-// [ED] Non-blocking inserts keep visual feedback responsive during small delight moments.
-// [PR] The QR-like scenario supports willingness to use digital product guidance.
-export function configureAnalytics({ sessionId, channel = "skin_finder" }) {
-  context = { sessionId, channel };
+export function configureAnalytics({ sessionId, variant = "a" }) {
+  context = { sessionId, variant };
   sessionStart = Date.now();
 }
 
@@ -27,12 +21,23 @@ export function getElapsedMs() {
   return Date.now() - sessionStart;
 }
 
-export async function logEvent(eventName, payload = {}, eventGroup = "study") {
+function queueEvent(event) {
+  try {
+    const existing = JSON.parse(localStorage.getItem(eventsKey) || "[]");
+    existing.push(event);
+    localStorage.setItem(eventsKey, JSON.stringify(existing));
+  } catch {
+    // localStorage unavailable — silently skip
+  }
+}
+
+// Synchronous: queues to localStorage immediately, fires Supabase as background promise.
+export function logEvent(eventName, payload = {}) {
   const event = {
     session_id: context.sessionId,
-    channel: context.channel,
+    variant: context.variant,
     event_name: eventName,
-    event_group: eventGroup,
+    timestamp: new Date().toISOString(),
     elapsed_ms: getElapsedMs(),
     payload,
     user_agent: navigator.userAgent,
@@ -40,15 +45,22 @@ export async function logEvent(eventName, payload = {}, eventGroup = "study") {
     screen_height: window.innerHeight
   };
 
+  queueEvent(event);
+
   if (!supabase) {
-    console.info("[glowguide analytics]", event);
+    if (isDev) console.info("[glowguide analytics]", event);
     return event;
   }
 
-  const { error } = await supabase.from(tableName).insert(event);
-  if (error) {
-    console.warn("[glowguide analytics insert failed]", error.message, event);
-  }
+  supabase
+    .from(tableName)
+    .insert(event)
+    .then(({ error }) => {
+      if (error && isDev) console.warn("[glowguide analytics insert failed]", error.message);
+    })
+    .catch((err) => {
+      if (isDev) console.warn("[glowguide analytics error]", err);
+    });
 
   return event;
 }

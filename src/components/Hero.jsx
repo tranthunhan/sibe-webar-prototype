@@ -1,4 +1,4 @@
-export default function Hero({ onStart }) {
+export default function Hero({ onStart, ctaLabel = "Start skin match" }) {
   return (
     <section className="hero">
       <div className="hero__copy">
@@ -8,7 +8,7 @@ export default function Hero({ onStart }) {
           Answer a few quick questions and compare products without reading every label.
         </p>
         <button className="primary-button" type="button" onClick={onStart}>
-          Start skin match
+          {ctaLabel}
         </button>
       </div>
       <div className="hero__visual" aria-label="Skincare product lineup">
